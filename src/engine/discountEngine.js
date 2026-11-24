@@ -131,18 +131,18 @@ export function applyDiscounts(item, rules) {
   const reasoningParts = []
 
   if (winner) {
-    price -= calculateDiscountAmount(price, winner)
+    price = Math.max(0, price - calculateDiscountAmount(price, winner))
     appliedRules.push(winner.ruleId)
     reasoningParts.push(ruleToReasoning(winner))
   }
 
   for (const rule of stackable) {
-    price -= calculateDiscountAmount(price, rule)
+    price = Math.max(0, price - calculateDiscountAmount(price, rule))
     appliedRules.push(rule.ruleId)
     reasoningParts.push(ruleToReasoning(rule))
   }
 
-  const finalPrice = Math.round(price)
+  const finalPrice = Math.max(0, Math.round(price))
 
   return {
     itemId: item.itemId,
