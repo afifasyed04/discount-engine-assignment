@@ -1,87 +1,40 @@
-# Opptra Discount Engine — Base Implementation
 
-This is the base implementation for the Opptra FDE Intern assignment.
-Fork this repo, complete the tasks in the assignment brief, and submit your GitHub link + Loom.
+## Live Demo
 
-## Running locally
+https://discount-engine-assignment-main.vercel.app
 
-```bash
-npm install
-npm run dev
-```
+## Features
 
-Open http://localhost:5173
+- Item-level brand and platform discounts
+- Stackable discount rules
+- Cart-level discounts with minimum thresholds
+- Natural-language rule creation using Google Gemini
+- Rule validation and confirmation before applying
+- Shopping cart PDF upload and automatic recalculation
+- Customer-facing discount explanations
 
-## Deploying
+## Running Locally
 
-```bash
-npm run build
-```
+1. Install dependencies: `npm install`
+2. Configure `GEMINI_API_KEY` in `.env.local`
+3. Run `npx vercel dev`
 
-Deploy the `dist/` folder to Vercel, Netlify, or any static host.
-The live deployment URL must be in your README before submission.
+The application runs at the URL shown in the terminal.
 
-## How to use
+## Sample Data
 
-1. Upload `sample-data/rules.csv` as the discount rules input
-2. Upload `sample-data/cart.csv` as the cart input
-3. Click **Calculate Discounts**
+Upload `sample-data/rules.csv` and `sample-data/cart.csv`.
 
-## Project structure
+Expected final cart total: Rs.5,339.
 
-```
-src/
-  engine/
-    discountEngine.js   ← pure discount logic (no UI)
-    csvParser.js        ← CSV → typed objects
-  components/
-    CsvUploader.jsx     ← file upload area
-    DataTable.jsx       ← reusable table
-    ErrorBanner.jsx     ← parse error display
-  App.jsx               ← main UI + state
-  main.jsx              ← entry point
+## PDF Testing
 
-sample-data/
-  rules.csv             ← sample discount rules
-  cart.csv              ← sample cart items
-```
+Use `sample-data/Opptra_Sample_Cart.pdf` to test PDF extraction.
 
-## CSV formats
+## Architecture
 
-**rules.csv**
-
-| Column     | Type              | Example          |
-|------------|-------------------|------------------|
-| rule_id    | string            | RULE-01          |
-| scope      | brand \| platform | platform         |
-| applies_to | string            | Amazon India     |
-| type       | percentage \| flat| percentage       |
-| value      | number            | 15               |
-| stackable  | true \| false     | false            |
-
-**cart.csv**
-
-| Column     | Type   | Example      |
-|------------|--------|--------------|
-| item_id    | string | ITEM-01      |
-| product    | string | Cushion Cover|
-| brand      | string | Natura Casa  |
-| platform   | string | Amazon India |
-| base_price | number | 1299         |
-
-## Discount logic
-
-- When multiple non-stackable rules match an item, the one giving the **largest saving in rupees** is applied.
-- Rules marked `stackable: true` apply **on top of** the winning non-stackable rule.
-- If no rules match, the base price is returned with a "No offers available" note.
-
-## Expected results for the sample data
-
-| Item    | Base Price | Final Price | Reasoning                              |
-|---------|-----------|-------------|----------------------------------------|
-| ITEM-01 | Rs.1,299  | Rs.1,104    | Platform offer: 15% off (beats Rs.150) |
-| ITEM-02 | Rs.849    | Rs.629      | Brand offer: Rs.150 off + Platform 10% |
-| ITEM-03 | Rs.599    | Rs.509      | Platform offer: 15% off                |
-| ITEM-04 | Rs.2,499  | Rs.2,499    | No offers available                    |
-| ITEM-05 | Rs.449    | Rs.382      | Platform offer: 15% off                |
-| ITEM-06 | Rs.899    | Rs.809      | Platform offer: 10% off                |
+- React and Vite for the frontend
+- Pure JavaScript discount calculation engine
+- Google Gemini for natural-language rule parsing
+- PDF.js for PDF table extraction
+- Vercel serverless API for secure AI requests
